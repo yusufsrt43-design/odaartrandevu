@@ -70,7 +70,7 @@
                 .catch(error => {
                     console.error('Hata!', error.message);
                     sonucMesaji.classList.remove('hidden');
-                    sonucMesaji.innerText = "Bir bağlantı hatası oluştu.";
+                    sonucMesaji.innerText = data.message || data.error || "Bilinmeyen bir sunucu hatası oluştu.";
                     sonucMesaji.classList.add('text-red-600');
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Tekrar Dene";
