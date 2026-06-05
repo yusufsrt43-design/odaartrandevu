@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etkinlik Başvurusu</title>
-    <!-- Stil için Tailwind CSS ekliyoruz -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -12,7 +11,6 @@
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Etkinlik Kayıt Formu</h2>
         
-        <!-- Form Başlangıcı -->
         <form id="basvuruFormu" class="space-y-4">
             <div>
                 <label class="block text-gray-700 text-sm font-bold mb-2">Adınız ve Soyadınız</label>
@@ -29,12 +27,10 @@
             </button>
         </form>
 
-        <!-- Sonuç Mesajı Kutusu -->
         <div id="sonucMesaji" class="mt-4 text-center font-bold hidden"></div>
     </div>
 
     <script>
-        // Google Apps Script URL'nizi buraya yapıştırın
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwOsdn3mrjN-8X0B0y4x3TIBqVippQnv9vl5JAkZ3p9z4V2X6itrocBWhm-1VvAUZZ4QA/exec';
         const form = document.getElementById('basvuruFormu');
         const submitBtn = document.getElementById('submitBtn');
@@ -52,13 +48,15 @@
             fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                 .then(response => response.json())
                 .then(data => {
-                    sonucMesaji.classList.remove('hidden');
+                    sonucMesaji.className = "mt-4 text-center font-bold text-base"; // Sınıfları sıfırla
+                    
                     if(data.result === "success") {
                         sonucMesaji.innerText = "Başvurunuz başarıyla alındı!";
                         sonucMesaji.classList.add('text-green-600');
                         form.reset(); // Formu temizle
                     } else if (data.result === "error") {
-                        sonucMesaji.innerText = data.message; // "Kontenjan doldu" mesajı
+                        // 1. DÜZELTME: Google'dan dönen hata mesajını veya sistem hatasını burada yakalıyoruz.
+                        sonucMesaji.innerText = data.message || data.error || "Kontenjan hatası veya sunucu problemi oluştu.";
                         sonucMesaji.classList.add('text-red-600');
                     }
                     
@@ -69,11 +67,14 @@
                 })
                 .catch(error => {
                     console.error('Hata!', error.message);
-                    sonucMesaji.classList.remove('hidden');
-                    sonucMesaji.innerText = data.message || data.error || "Bilinmeyen bir sunucu hatası oluştu.";
-                    sonucMesaji.classList.add('text-red-600');
+                    sonucMesaji.className = "mt-4 text-center font-bold text-base text-red-600";
+                    // 2. DÜZELTME: .catch bloğu içinde 'data' yaşamaz, internet kesintisi gibi durumlar için 'error.message' kullanılır.
+                    sonucMesaji.innerText = "Bağlantı Hatası: " + error.message;
+                    
+                    // Butonu eski haline getir (Hata durumunda buton kilitli kalmasın)
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Tekrar Dene";
+                    submitBtn.classList.replace('bg-gray-400', 'bg-blue-500');
                 });
         });
     </script>
