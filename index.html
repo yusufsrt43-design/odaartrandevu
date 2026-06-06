@@ -4,30 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etkinlik Başvurusu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    
+    <style>
+        /* Tüm sayfanın (arkaplanın) tasarımı */
+        body {
+            background-color: #f3f4f6; /* Açık gri arkaplan */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Etkinlik Kayıt Formu</h2>
+        /* Beyaz form kutusunun tasarımı */
+        .form-kutusu {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Başlık tasarımı */
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #1f2937;
+        }
+
+        /* Input (Metin kutuları) alanları */
+        .form-grubu {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            box-sizing: border-box; /* Kutunun taşmasını engeller */
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #3b82f6; /* Tıklanınca mavi çerçeve */
+        }
+
+        /* Buton tasarımı */
+        button {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #2563eb; /* Üzerine gelince koyu mavi */
+        }
+
+        button:disabled {
+            background-color: #9ca3af; /* Yüklenirken gri renk */
+            cursor: not-allowed;
+        }
+
+        /* Hata ve Başarı Mesajı Renkleri */
+        .mesaj-kutu { margin-top: 1rem; text-align: center; font-weight: bold; font-size: 1rem; }
+        .gizli { display: none; }
+        .basari-rengi { color: #16a34a; }
+        .hata-rengi { color: #dc2626; }
+    </style>
+    </head>
+<body>
+
+    <div class="form-kutusu">
+        <h2>Etkinlik Kayıt Formu</h2>
         
-        <form id="basvuruFormu" class="space-y-4">
-            <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">Adınız ve Soyadınız</label>
-                <input type="text" name="Ad_Soyad" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500">
+        <form id="basvuruFormu">
+            <div class="form-grubu">
+                <label>Adınız ve Soyadınız</label>
+                <input type="text" name="Ad_Soyad" required>
             </div>
             
-            <div>
-                <label class="block text-gray-700 text-sm font-bold mb-2">E-Posta Adresiniz</label>
-                <input type="email" name="Email" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500">
+            <div class="form-grubu">
+                <label>E-Posta Adresiniz</label>
+                <input type="email" name="Email" required>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
-                Başvuruyu Tamamla
-            </button>
+            <button type="submit" id="submitBtn">Başvuruyu Tamamla</button>
         </form>
 
-        <div id="sonucMesaji" class="mt-4 text-center font-bold hidden"></div>
+        <div id="sonucMesaji" class="mesaj-kutu gizli"></div>
     </div>
 
     <script>
@@ -37,44 +122,35 @@
         const sonucMesaji = document.getElementById('sonucMesaji');
 
         form.addEventListener('submit', e => {
-            e.preventDefault(); // Sayfanın yenilenmesini engeller
+            e.preventDefault(); 
             
-            // Butonu yükleniyor durumuna al
             submitBtn.disabled = true;
             submitBtn.innerText = "Gönderiliyor...";
-            submitBtn.classList.replace('bg-blue-500', 'bg-gray-400');
 
-            // Form verilerini al ve Google'a yolla
             fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                 .then(response => response.json())
                 .then(data => {
-                    sonucMesaji.className = "mt-4 text-center font-bold text-base"; // Sınıfları sıfırla
+                    sonucMesaji.className = "mesaj-kutu"; // Sınıfları sıfırla
                     
                     if(data.result === "success") {
                         sonucMesaji.innerText = "Başvurunuz başarıyla alındı!";
-                        sonucMesaji.classList.add('text-green-600');
-                        form.reset(); // Formu temizle
+                        sonucMesaji.classList.add('basari-rengi');
+                        form.reset(); 
                     } else if (data.result === "error") {
-                        // 1. DÜZELTME: Google'dan dönen hata mesajını veya sistem hatasını burada yakalıyoruz.
                         sonucMesaji.innerText = data.message || data.error || "Kontenjan hatası veya sunucu problemi oluştu.";
-                        sonucMesaji.classList.add('text-red-600');
+                        sonucMesaji.classList.add('hata-rengi');
                     }
                     
-                    // Butonu eski haline getir
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Başvuruyu Tamamla";
-                    submitBtn.classList.replace('bg-gray-400', 'bg-blue-500');
                 })
                 .catch(error => {
                     console.error('Hata!', error.message);
-                    sonucMesaji.className = "mt-4 text-center font-bold text-base text-red-600";
-                    // 2. DÜZELTME: .catch bloğu içinde 'data' yaşamaz, internet kesintisi gibi durumlar için 'error.message' kullanılır.
+                    sonucMesaji.className = "mesaj-kutu hata-rengi";
                     sonucMesaji.innerText = "Bağlantı Hatası: " + error.message;
                     
-                    // Butonu eski haline getir (Hata durumunda buton kilitli kalmasın)
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Tekrar Dene";
-                    submitBtn.classList.replace('bg-gray-400', 'bg-blue-500');
                 });
         });
     </script>
