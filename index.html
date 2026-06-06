@@ -8,45 +8,43 @@
     <style>
         /* Tüm sayfanın (arkaplanın) tasarımı */
         body {
-        /* --- YENİ EKLENEN ARKA PLAN KODLARI --- */
-            background-image: url('background.webp'); /* Görselinizin dosya adı */
-            background-size: cover; /* Resmi sündürmeden ekranı tamamen kapla */
-            background-position: center; /* Resmin tam merkezini ekrana ortala */
-            background-repeat: no-repeat; /* Resim küçükse kendini tekrar edip mozaik olmasın */
-            background-attachment: fixed; /* Mobilde veya PC'de aşağı kaydırırken arkaplan sabit kalsın */
-            
-            background-color: #f3f4f6; /* Açık gri arkaplan */
+            background-image: url('background.webp'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
+            background-color: #f3f4f6; 
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column; 
+            gap: 20px; 
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px; 
+            box-sizing: border-box;
         }
 
-        /* Beyaz form kutusunun tasarımı */
-        .form-kutusu {
-            background-color: #ffffff;
+        /* Form Kutusu ve Alt Kutu Ortak Tasarımı */
+        .form-kutusu, .form2-kutusu {
+            background-color: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.3); 
             padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 200px 200px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
             width: 100%;
             max-width: 400px;
-        }
-
-        .form2-kutusu {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 200px 200px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+            box-sizing: border-box;
         }
         
-        /* Başlık tasarımı */
+        /* Başlık tasarımları */
         h2 {
             font-size: 1.5rem;
             font-weight: bold;
+            margin-top: 0;
             margin-bottom: 1.5rem;
             text-align: center;
             color: #1f2937;
@@ -70,13 +68,14 @@
             padding: 0.5rem 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 0.25rem;
-            box-sizing: border-box; /* Kutunun taşmasını engeller */
+            box-sizing: border-box; 
             outline: none;
             transition: border-color 0.2s;
+            background-color: rgba(255, 255, 255, 0.9);
         }
 
         input:focus {
-            border-color: #3b82f6; /* Tıklanınca mavi çerçeve */
+            border-color: #000000; 
         }
 
         /* Buton tasarımı */
@@ -94,12 +93,21 @@
         }
 
         button:hover {
-            background-color: #2563eb; /* Üzerine gelince koyu mavi */
+            background-color: #333333; 
         }
 
         button:disabled {
-            background-color: #9ca3af; /* Yüklenirken gri renk */
+            background-color: #9ca3af; 
             cursor: not-allowed;
+        }
+
+        /* --- YENİ EKLENEN LOGO/FOTOĞRAF TASARIMI --- */
+        .kutu-resmi {
+            width: 100%; /* Kutunun genişliğine tam otursun */
+            max-height: 120px; /* Çok yüksek bir resimse kutuyu çok uzatmasın, sınırı olsun */
+            object-fit: contain; /* Resmi kesmeden, orantısını bozmadan sığdır */
+            display: block; 
+            margin: 0 auto; /* Resmi kutunun tam ortasına hizala */
         }
 
         /* Hata ve Başarı Mesajı Renkleri */
@@ -108,7 +116,7 @@
         .basari-rengi { color: #16a34a; }
         .hata-rengi { color: #dc2626; }
     </style>
-    </head>
+</head>
 <body>
 
     <div class="form-kutusu">
@@ -129,12 +137,10 @@
         </form>
 
         <div id="sonucMesaji" class="mesaj-kutu gizli"></div>
+    </div>
 
-        <div class="form2-kutusu">
-             <div class="form-grubu">
-            <h3>Po.E.T.A X ODA ART</h3>
-                 </div>
-            </div>
+    <div class="form2-kutusu">
+        <img src="foto.webp" alt="Po.E.T.A X ODA ART Logo" class="kutu-resmi">
     </div>
 
     <script>
@@ -152,7 +158,7 @@
             fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                 .then(response => response.json())
                 .then(data => {
-                    sonucMesaji.className = "mesaj-kutu"; // Sınıfları sıfırla
+                    sonucMesaji.className = "mesaj-kutu"; 
                     
                     if(data.result === "success") {
                         sonucMesaji.innerText = "Başvurunuz başarıyla alındı!";
