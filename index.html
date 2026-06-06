@@ -8,6 +8,13 @@
     <style>
         /* Tüm sayfanın (arkaplanın) tasarımı */
         body {
+        /* --- YENİ EKLENEN ARKA PLAN KODLARI --- */
+            background-image: url('background.webp'); /* Görselinizin dosya adı */
+            background-size: cover; /* Resmi sündürmeden ekranı tamamen kapla */
+            background-position: center; /* Resmin tam merkezini ekrana ortala */
+            background-repeat: no-repeat; /* Resim küçükse kendini tekrar edip mozaik olmasın */
+            background-attachment: fixed; /* Mobilde veya PC'de aşağı kaydırırken arkaplan sabit kalsın */
+            
             background-color: #f3f4f6; /* Açık gri arkaplan */
             font-family: Arial, sans-serif;
             display: flex;
@@ -66,7 +73,7 @@
         /* Buton tasarımı */
         button {
             width: 100%;
-            background-color: #3b82f6;
+            background-color: black;
             color: white;
             font-weight: bold;
             padding: 0.5rem 1rem;
